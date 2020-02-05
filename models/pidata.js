@@ -1,7 +1,7 @@
 "use strict";
 
 // const mongoose = require('mongoose');
-const db = require("../singletons/db");
+// const db = require("../singletons/db");
 const Schema = require("mongoose").Schema;
 
 //Pi Data schema

@@ -11,7 +11,7 @@ const router = require("./api/routes");
 const { io } = require("./singletons/socket");
 
 // mongo db connection
-const db = require("./singletons/db");
+// const db = require("./singletons/db");
 const mqtt = require("./singletons/mqtt");
 app.use(cors());
 // Use CORS
