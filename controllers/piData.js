@@ -21,7 +21,7 @@ const getLatestFileContent = async (req, res, next) => {
     fileContent.pop(); //remove the last element which is empty string ""
     res.json({ fileName, fileContent });
   } catch (error) {
-    res.json({ error: error });
+    res.status(404).json({ error: "Requested file does not exist" });
   }
 };
 

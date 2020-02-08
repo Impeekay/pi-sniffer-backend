@@ -31,9 +31,18 @@ mqttclient.on("message", async function(topic, message) {
     console.log("New message on topic " + topic);
     if (topic === "frame_topic") {
       let messageJson = JSON.parse(message.toString());
+      // console.log(messageJson);
       //   saveFrameDataToDb(JSON.parse(message.toString()));
       saveFrameDataToFile(messageJson);
       io.io.emit("newData", messageJson); //after saving to file emit the event to frontend
+    } else if (topic === "cache_frame_topic") {
+      // console.log(message.toString());
+      let messageJson = JSON.parse(message.toString());
+      messageJson.cached_frames.length
+        ? messageJson.cached_frames.forEach(frame => {
+            saveFrameDataToFile(frame);
+          })
+        : console.log("Nothing to insert in cached_frame message received");
     }
   } catch (error) {
     console.log("Error in on message callback " + error);
