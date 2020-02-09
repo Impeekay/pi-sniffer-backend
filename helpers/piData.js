@@ -21,7 +21,7 @@ const saveFrameDataToDb = frameData => {
         directedProbes.forEach(probe => {
           probe.timestamp = moment(
             probe.timestamp,
-            "YYYY-MM-DDTHH:mm:ss"
+            "YYYY-MM-DDTHH:mm:ssZ"
           ).toDate();
         });
       }
