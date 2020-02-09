@@ -8,7 +8,7 @@ const User = require("../models/user"),
 // Fetch all
 const fetchAll = async (req, res, next) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({}, { password: 0 }); //exclude passwords from the fetched documents
     res.status(200).json({ users });
   } catch (error) {
     res.status(404).json({ error: error.message });

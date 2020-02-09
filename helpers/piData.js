@@ -1,6 +1,6 @@
 "use strict";
 const moment = require("moment");
-const PiData = require("../models/pidata");
+const PiData = require("../models/piData");
 const fs = require("fs");
 
 let filePath = "./data/";

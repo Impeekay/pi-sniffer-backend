@@ -2,13 +2,10 @@ const config = require("../../configs/config");
 const mongoose = require("mongoose");
 const User = require("../../models/user");
 
-mongoose.Promise = Promise;
-mongoose.connect(config.database);
+const db = require("../../singletons/db");
 
-const db = mongoose.connection;
-
-db.once("open", () => {
-  dropDataBase();
+db.once("open", async () => {
+  await dropDataBase();
   insertUser();
 });
 

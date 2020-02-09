@@ -56,7 +56,6 @@ const UserSchema = new Schema(
 
 // Pre-save of user to database, hash password if password is modified or new
 UserSchema.pre("save", function(next) {
-  console.log("ASONCSLK");
   const user = this,
     SALT_FACTOR = 5;
 
@@ -65,7 +64,7 @@ UserSchema.pre("save", function(next) {
   bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
     if (err) return next(err);
 
-    bcrypt.hash(user.password, salt, null, function(err, hash) {
+    bcrypt.hash(user.password, salt, function(err, hash) {
       if (err) return next(err);
       user.password = hash;
       next();
@@ -75,7 +74,6 @@ UserSchema.pre("save", function(next) {
 
 // Method to compare password for login
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
-  console.log(this.password);
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) {
       return cb(err);

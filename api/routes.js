@@ -44,7 +44,7 @@ module.exports = app => {
 
   apiRoutes.use("/piData", piDataRoutes);
 
-  piDataRoutes.get("/", getLatestFileContent);
+  piDataRoutes.get("/", requireAuth, getLatestFileContent, authError);
 
   // Set User routes as subgroup/middleware to apiRoutes
   apiRoutes.use("/users", userRoutes);
