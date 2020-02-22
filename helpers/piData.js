@@ -6,10 +6,10 @@ const fs = require("fs");
 let filePath = "./data/";
 let fileStream = fs.createWriteStream(
   `${filePath}${moment()
-    .startOf("hour")
+    .startOf("day")
     .toISOString()}`,
   { flags: "a" }
-); //handler used to write to the file (initially setup with the file of that hour)
+); //handler used to write to the file (initially setup with the file of that day)
 
 const saveFrameDataToDb = frameData => {
   return new Promise(async (resolve, reject) => {
@@ -34,7 +34,7 @@ const saveFrameDataToDb = frameData => {
           ).toDate();
         });
       }
-      //Get the split bucketed document into the db by the hour
+      //Get the split bucketed document into the db by the hour //TODO: change to day
       const insertPiDataFrame = await PiData.findOneAndUpdate(
         {
           time: moment()
@@ -88,7 +88,7 @@ const saveFrameDataToFile = frameData => {
       //   .startOf("hour")
       //   .toISOString();
       const fileName = moment(frameData.timestamp, "YYYY-MM-DDTHH:mm:ssZ")
-        .startOf("hour")
+        .startOf("day")
         .toISOString();
       const waitForFileStreamInitialization = await _checkIfFileExistsAndCreateIfNot(
         fileName
