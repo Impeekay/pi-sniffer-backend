@@ -18,8 +18,9 @@ const getLatestFileContent = async (req, res, next) => {
         .toISOString();
     let fileContent = await readFile(`${filePath}${fileName}`, "utf8");
     fileContent = fileContent.split("\n");
-    fileContent = fileContent.slice(numberOfLines); //send back only the last 10 entries or requested number of lines in the request
-    fileContent.pop(); //remove the last element which is empty string ""
+    //slice takes start and end index
+    fileContent = fileContent.slice(0, numberOfLines); //send back only the last 10 entries or requested number of lines in the request
+    fileContent.pop(); //remove the last element which is empty string "" after slice
     res.json({ fileName, fileContent });
   } catch (error) {
     res.status(404).json({ error: "Requested file does not exist" });
