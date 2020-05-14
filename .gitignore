@@ -1,6 +1,9 @@
-config.js
+config.*
 node_modules/
 package-lock.json
 data/*
 .idea
 db.json
+main.js
+
+newData/*

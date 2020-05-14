@@ -5,20 +5,18 @@ const fs = require("fs");
 
 let filePath = "./data/";
 let fileStream = fs.createWriteStream(
-  `${filePath}${moment()
-    .startOf("day")
-    .toISOString()}`,
+  `${filePath}${moment().startOf("day").toISOString()}`,
   { flags: "a" }
 ); //handler used to write to the file (initially setup with the file of that day)
 
-const saveFrameDataToDb = frameData => {
+const saveFrameDataToDb = (frameData) => {
   return new Promise(async (resolve, reject) => {
     try {
       const directedProbes = frameData.frame.probes.directed;
       const nullProbes = frameData.frame.probes.null;
       if (directedProbes.length != 0) {
         //Convert each timestamp to a date object so queries to mongo is easier
-        directedProbes.forEach(probe => {
+        directedProbes.forEach((probe) => {
           probe.timestamp = moment(
             probe.timestamp,
             "YYYY-MM-DDTHH:mm:ssZ"
@@ -27,7 +25,7 @@ const saveFrameDataToDb = frameData => {
       }
       if (nullProbes.length != 0) {
         //Convert each timestamp to a date object so queries to mongo is easier
-        nullProbes.forEach(probe => {
+        nullProbes.forEach((probe) => {
           probe.timestamp = moment(
             probe.timestamp,
             "YYYY-MM-DDTHH:mm:ssZ"
@@ -37,15 +35,13 @@ const saveFrameDataToDb = frameData => {
       //Get the split bucketed document into the db by the hour //TODO: change to day
       const insertPiDataFrame = await PiData.findOneAndUpdate(
         {
-          time: moment()
-            .startOf("hour")
-            .toDate()
+          time: moment().startOf("hour").toDate(),
         },
         {
           $push: {
             directed: { $each: directedProbes },
-            null: { $each: nullProbes }
-          }
+            null: { $each: nullProbes },
+          },
         },
         { upsert: true }
       );
@@ -55,9 +51,9 @@ const saveFrameDataToDb = frameData => {
   });
 };
 
-const _fileExists = fileName => {
+const _fileExists = (fileName) => {
   return new Promise((resolve, reject) => {
-    fs.access(`${filePath}${fileName}`, fs.constants.F_OK, err => {
+    fs.access(`${filePath}${fileName}`, fs.constants.F_OK, (err) => {
       if (err) {
         return resolve(false); //if file does not exist resolve with false instead of reject
       }
@@ -66,7 +62,7 @@ const _fileExists = fileName => {
   });
 };
 
-const _checkIfFileExistsAndCreateIfNot = async fileName => {
+const _checkIfFileExistsAndCreateIfNot = async (fileName) => {
   try {
     let exists = await _fileExists(fileName);
     if (exists) {
@@ -81,7 +77,7 @@ const _checkIfFileExistsAndCreateIfNot = async fileName => {
   }
 };
 
-const saveFrameDataToFile = frameData => {
+const saveFrameDataToFile = (frameData) => {
   return new Promise(async (resolve, reject) => {
     try {
       // const fileName = moment()

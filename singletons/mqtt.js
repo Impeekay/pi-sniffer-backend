@@ -1,6 +1,6 @@
 "use strict";
 const mqtt = require("mqtt");
-const config = require("../configs/config");
+const config = require("../config/main");
 const io = require("./socket");
 const { saveFrameDataToDb, saveFrameDataToFile } = require("../helpers/piData");
 //set the connect options for the mqtt connection
@@ -9,7 +9,7 @@ const connectOptions = {
   port: config.mqttPort,
   username: config.mqttUsername,
   password: config.mqttPassword,
-  keepalive: 60
+  keepalive: 60,
 };
 
 const mqttclient = mqtt.connect(connectOptions);
@@ -17,14 +17,14 @@ const mqttclient = mqtt.connect(connectOptions);
 //TODO: handle errors and report them somewhere
 
 // Mqtt connect calback
-mqttclient.on("connect", function() {
+mqttclient.on("connect", function () {
   console.log("Mqtt Client connected to the broker");
   //Now subscribe to the frame topic so that we start getting data (Array of topics)
   mqttclient.subscribe(config.mqttTopics);
 });
 
 // Mqtt message calback
-mqttclient.on("message", async function(topic, message) {
+mqttclient.on("message", async function (topic, message) {
   // message is Buffer
   try {
     // console.log(message.toString())
@@ -39,7 +39,7 @@ mqttclient.on("message", async function(topic, message) {
       // console.log(message.toString());
       let messageJson = JSON.parse(message.toString());
       messageJson.cached_frames.length
-        ? messageJson.cached_frames.forEach(frame => {
+        ? messageJson.cached_frames.forEach((frame) => {
             saveFrameDataToFile(frame);
           })
         : console.log("Nothing to insert in cached_frame message received");
@@ -50,7 +50,7 @@ mqttclient.on("message", async function(topic, message) {
 });
 
 // Mqtt error calback
-mqttclient.on("error", err => {
+mqttclient.on("error", (err) => {
   console.log("mqtt client error " + err);
 });
 
