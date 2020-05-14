@@ -9,7 +9,7 @@
 - clone this repo
 - ensure node.js is installed (used version: lts(12.14.0))
 - run `npm install`
-- add `config.js` in configs directory
+- add `main.js` in config directory
 - ```
     module.exports = {
         clientUrl: "frontend service",
@@ -21,4 +21,22 @@
         mqttTopics: ["frame_topic","cache_frame_topic"]
     };
   ```
+- add `config.js` in config directory
+- ```
+    module.exports = {
+    development: {
+      username: "someUser",
+      password: "somePassword",
+      database: "someDatabase",
+      host: "someHose",
+      dialect: "postgres",
+      logging: false,
+      pool: {
+        max: 5,
+        idle: 10000,
+      },
+    }
+  };
+  ```
+
 - run `node index.js`
