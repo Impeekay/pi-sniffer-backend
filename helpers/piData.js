@@ -1,7 +1,7 @@
 "use strict";
 const moment = require("moment");
 const { Camera, Wifi } = require("../models");
-const fs = require("fs");
+// const fs = require("fs");
 
 const saveFrameDataToDb = (frameData) => {
   return new Promise(async (resolve, reject) => {
@@ -9,10 +9,10 @@ const saveFrameDataToDb = (frameData) => {
       const directedProbes = frameData.frame.probes.directed;
       const nullProbes = frameData.frame.probes.null;
       const deviceMacId = frameData.deviceMacID;
-      const frameTimeStamp = moment(
-        frameData.timestamp,
+      const frameTimeStamp = moment.parseZone(
+        frame.timestamp,
         "YYYY-MM-DDTHH:mm:ssZ"
-      ).format();
+      )._d;
       let insertObjects = [];
       if (directedProbes.length != 0) {
         //iterate over all the directedProbes if not null and create a new frame to be pushed into the db
@@ -53,10 +53,12 @@ const saveCameraDetectionsToDb = (frame) => {
     try {
       const deviceMacId = frame.deviceMacId;
       const detections = frame.detections;
-      const timestamp = moment(
+      // console.log(frame.timestamp);
+      const timestamp = moment.parseZone(
         frame.timestamp,
         "YYYY-MM-DDTHH:mm:ssZ"
-      ).format();
+      )._d;
+      // console.log(timestamp);
       let cameraDetectionObject = {
         deviceMacId: deviceMacId,
         detections: detections,
