@@ -9,6 +9,7 @@ const saveFrameDataToDb = (frameData) => {
       const directedProbes = frameData.frame.probes.directed;
       const nullProbes = frameData.frame.probes.null;
       const deviceMacId = frameData.deviceMacID;
+      //HACK:currently using _d of the returned object since moment toDate uses native new Date
       const frameTimeStamp = moment.parseZone(
         frame.timestamp,
         "YYYY-MM-DDTHH:mm:ssZ"
@@ -54,6 +55,7 @@ const saveCameraDetectionsToDb = (frame) => {
       const deviceMacId = frame.deviceMacId;
       const detections = frame.detections;
       // console.log(frame.timestamp);
+      //HACK:currently using _d of the returned object since moment toDate uses native new Date
       const timestamp = moment.parseZone(
         frame.timestamp,
         "YYYY-MM-DDTHH:mm:ssZ"
