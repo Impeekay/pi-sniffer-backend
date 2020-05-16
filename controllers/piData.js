@@ -3,6 +3,9 @@ const fs = require("fs");
 const moment = require("moment");
 const util = require("util");
 
+const { Wifi, Camera } = require("../models");
+const { Op } = require("sequelize");
+
 const readFile = util.promisify(fs.readFile);
 
 let filePath = "./data/";
@@ -12,10 +15,7 @@ const getLatestFileContent = async (req, res, next) => {
   try {
     const numberOfLines = req.query.numberOfLines || 11; // get number of lines to send back from the request, if not sent default it to 11
     const fileName =
-      req.query.fileName ||
-      moment()
-        .startOf("day")
-        .toISOString();
+      req.query.fileName || moment().startOf("day").toISOString();
     let fileContent = await readFile(`${filePath}${fileName}`, "utf8");
     fileContent = fileContent.split("\n");
     //slice takes start and end index
@@ -27,4 +27,58 @@ const getLatestFileContent = async (req, res, next) => {
   }
 };
 
-module.exports = { getLatestFileContent };
+const getLatestProbesFromDb = async (req, res, next) => {
+  try {
+    const startTime =
+      moment(req.query.startTime).toDate() || moment().startOf("day").toDate();
+    const endTime = moment().toDate();
+    let probes = await Wifi.findAll({
+      attributes: { exclude: ["id", "createdAt", "updatedAt"] },
+      where: {
+        timestamp: {
+          [Op.gte]: startTime,
+          [Op.lte]: endTime,
+        },
+      },
+    });
+    if (probes.length !== 0) {
+      return res.json({ probes });
+    }
+    res.json({ error: "No probes" });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+};
+
+// const getCameraDetections = async (req, res, next) => {
+//   try {
+//     const startTimeInterval =
+//       moment(req.query.startTimeInterval).toDate() ||
+//       moment().subtract(5, "minutes").toDate();
+//     const endTimeInterval =
+//       moment(req.query.endTimeInterval).toDate() || moment().toDate();
+//     let detections = await Camera.findAll({
+//       attributes: { exclude: ["id", "createdAt", "updatedAt", "deviceMacId"] },
+//       where: {
+//         timestamp: {
+//           [Op.gte]: startTimeInterval,
+//           [Op.lt]: endTimeInterval,
+//         },
+//       },
+//     });
+//     if (detections.length !== 0) {
+//       return res.json({ detections });
+//     }
+//     res.json({ detections: [] });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ error: "Something went wrong" });
+//   }
+// };
+
+module.exports = {
+  getLatestFileContent,
+  getLatestProbesFromDb,
+  // getCameraDetections,
+};

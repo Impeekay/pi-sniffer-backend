@@ -1,7 +1,11 @@
 const express = require("express");
-const { getLatestFileContent } = require("../controllers/piData");
+const {
+  getLatestFileContent,
+  getLatestProbesFromDb,
+  // getCameraDetections,
+} = require("../controllers/piData");
 
-module.exports = app => {
+module.exports = (app) => {
   const apiRoutes = express.Router();
   const piDataRoutes = express.Router();
 
@@ -9,5 +13,7 @@ module.exports = app => {
 
   apiRoutes.use("/piData", piDataRoutes);
 
-  piDataRoutes.get("/", getLatestFileContent);
+  piDataRoutes.get("/", getLatestProbesFromDb);
+
+  // piDataRoutes.get("/camera", getCameraDetections);
 };
