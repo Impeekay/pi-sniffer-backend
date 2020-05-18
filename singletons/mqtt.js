@@ -6,6 +6,9 @@ const {
   saveFrameDataToDb,
   saveCameraDetectionsToDb,
 } = require("../helpers/piData");
+
+const zmqSock = require("./zmq");
+
 //set the connect options for the mqtt connection
 const connectOptions = {
   host: config.mqttHost,
@@ -17,7 +20,11 @@ const connectOptions = {
 
 const mqttclient = mqtt.connect(connectOptions);
 
-//TODO: handle errors and report them somewhere
+const toggleDebugHandle = (data) => {
+  // console.log(data);
+  let dataJson = { toggle: data };
+  mqttclient.publish("remote_access", JSON.stringify(dataJson));
+};
 
 // Mqtt connect calback
 mqttclient.on("connect", function () {
@@ -65,3 +72,5 @@ mqttclient.on("error", (err) => {
 mqttclient.on("close", () => {
   console.log("mqtt client closed/disconnected ");
 });
+
+module.exports = { toggleDebugHandle };

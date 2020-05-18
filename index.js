@@ -16,7 +16,7 @@ const { sequelize } = require("./models");
 
 const { io } = require("./singletons/socket");
 
-const mqtt = require("./singletons/mqtt");
+const { toggleDebugHandle } = require("./singletons/mqtt");
 
 app.use(cors());
 
@@ -48,6 +48,10 @@ app.use(function (req, res, next) {
 
 io.on("connection", (socket) => {
   console.log("new connection " + socket.id);
+  socket.on("toggleDebug", async (data) => {
+    //call the toggle debug function and send the data to the raspberry pi
+    toggleDebugHandle(data);
+  });
 });
 
 //close the DB connection on end
