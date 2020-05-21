@@ -11,7 +11,7 @@ const saveFrameDataToDb = (frameData) => {
       const deviceMacId = frameData.deviceMacID;
       //HACK:currently using _d of the returned object since moment toDate uses native new Date
       const frameTimeStamp = moment.parseZone(
-        frame.timestamp,
+        frameData.timestamp,
         "YYYY-MM-DDTHH:mm:ssZ"
       )._d;
       let insertObjects = [];
