@@ -39,8 +39,8 @@ const getLatestProbesFromDb = async (req, res, next) => {
           [Op.gte]: startTime,
           [Op.lte]: endTime,
         },
-        limit: 50,
       },
+      limit: 50,
     });
     if (probes.length !== 0) {
       return res.json({ probes });
