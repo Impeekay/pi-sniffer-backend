@@ -14,8 +14,8 @@ let filePath = "./data/";
 const getLatestFileContent = async (req, res, next) => {
   try {
     const numberOfLines = req.query.numberOfLines || 11; // get number of lines to send back from the request, if not sent default it to 11
-    const fileName =
-      req.query.fileName || moment().startOf("day").toISOString();
+    const fileName = req.query.fileName ||
+      moment().startOf("day").toISOString();
     let fileContent = await readFile(`${filePath}${fileName}`, "utf8");
     fileContent = fileContent.split("\n");
     //slice takes start and end index
@@ -29,8 +29,8 @@ const getLatestFileContent = async (req, res, next) => {
 
 const getLatestProbesFromDb = async (req, res, next) => {
   try {
-    const startTime =
-      moment(req.query.startTime).toDate() || moment().startOf("day").toDate();
+    const startTime = moment(req.query.startTime).toDate() ||
+      moment().startOf("day").toDate();
     const endTime = moment().toDate();
     let probes = await Wifi.findAll({
       attributes: { exclude: ["id", "createdAt", "updatedAt"] },
@@ -39,6 +39,7 @@ const getLatestProbesFromDb = async (req, res, next) => {
           [Op.gte]: startTime,
           [Op.lte]: endTime,
         },
+        limit: 50,
       },
     });
     if (probes.length !== 0) {

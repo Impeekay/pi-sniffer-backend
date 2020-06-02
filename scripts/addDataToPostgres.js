@@ -25,25 +25,29 @@ const readAndProcessFile = function (file) {
         let frameJson = JSON.parse(line);
         let frameTimestamp = moment(
           frameJson.timestamp,
-          "YYYY-MM-DDTHH:mm:ssZ"
+          "YYYY-MM-DDTHH:mm:ssZ",
         ).format();
         let directed = frameJson.frame.probes.directed;
         let nullProbes = frameJson.frame.probes.null;
         if (directed.length !== 0) {
           directed.forEach((probe) => {
             csv.write(
-              `${deviceMacId}|${JSON.stringify(
-                JSON.stringify(probe)
-              )}|${null}|${frameTimestamp}\n`
+              `${deviceMacId}|${
+                JSON.stringify(
+                  JSON.stringify(probe),
+                )
+              }|${null}|${frameTimestamp}\n`,
             );
           });
         }
         if (nullProbes.length !== 0) {
           nullProbes.forEach((probe) => {
             csv.write(
-              `${deviceMacId}|${null}|${JSON.stringify(
-                JSON.stringify(probe)
-              )}|${frameTimestamp}\n`
+              `${deviceMacId}|${null}|${
+                JSON.stringify(
+                  JSON.stringify(probe),
+                )
+              }|${frameTimestamp}\n`,
             );
           });
         }
