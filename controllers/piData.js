@@ -32,6 +32,8 @@ const getLatestProbesFromDb = async (req, res, next) => {
     const startTime = moment(req.query.startTime).toDate() ||
       moment().startOf("day").toDate();
     const endTime = moment().toDate();
+    console.log(startTime);
+    console.log(endTime);
     let probes = await Wifi.findAll({
       attributes: { exclude: ["id", "createdAt", "updatedAt"] },
       where: {
