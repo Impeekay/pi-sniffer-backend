@@ -55,3 +55,63 @@ CREATE TRIGGER probes_count BEFORE
 INSERT
     OR DELETE ON "Wifis" FOR EACH ROW EXECUTE PROCEDURE adjust_count();
 COMMIT;
+--grafana queries
+--hourly trends of wifi probes
+SELECT date_trunc('hour', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+GROUP BY 1
+ORDER BY 1;
+--hourly trends of null probes
+SELECT date_trunc('hour', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+    AND "directedProbe" IS NULL
+GROUP BY 1
+ORDER BY 1;
+--hourly trends of null probes
+SELECT date_trunc('hour', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+    AND "nullProbe" IS NULL
+GROUP BY 1
+ORDER BY 1;
+--12 hour unique mac_id's
+select count(*)
+from (
+        select DISTINCT "directedProbe" -> 'mac_id'
+        from "Wifis"
+        where timestamp >= NOW() - interval '12 hours'
+            and "nullProbe" is NULL
+        INTERSECT
+        select DISTINCT "nullProbe" -> 'mac_id'
+        from "Wifis"
+        where timestamp >= NOW() - interval '12 hours'
+            and "directedProbe" is NULL
+    ) as count;
+--real time wifi probe collection 
+SELECT date_trunc('minute', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+GROUP BY 1
+ORDER BY 1;
+--real time directed wifi probe collection 
+SELECT date_trunc('minute', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+    AND "nullProbe" IS NULL
+GROUP BY 1
+ORDER BY 1;
+--real time null wifi probe collection 
+SELECT date_trunc('minute', timestamp) as time,
+    count(1)
+FROM "Wifis"
+WHERE $__timeFilter(timestamp)
+    AND "directedProbe" IS NULL
+GROUP BY 1
+ORDER BY 1;
